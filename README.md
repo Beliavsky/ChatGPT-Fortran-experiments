@@ -9,6 +9,7 @@ for name in ["bob", "cathy", "dennis"]
 next
 ```
 
+**ChatGPT-4 answer**<br>
 In Fortran, strings can be managed using character arrays. However, there's no direct equivalent to a Python-style list of strings, so we have to define an array of fixed-length character strings. 
 
 Here's a Fortran translation for your pseudocode:
