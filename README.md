@@ -1,6 +1,7 @@
 # ChatGPT-Fortran-experiments
 random experiments with ChatGPT to generate Fortran code
 
+---
 **Translate pseudocode to Fortran:**
 
 ```
@@ -79,4 +80,69 @@ end program monte_carlo_integration
 This code first initializes the random number generator using `call random_seed()`. Then it calculates the sum of f(x) for `n` random values of `x`, where `f(x) = x^2`. The final estimate for the integral is then `fsum/n`.
 
 Please note that this is a Monte Carlo estimation, so the result can vary a bit between runs due to the random number generation. The larger the value of `n`, the more accurate the estimate will be, as per the Law of Large Numbers.
+
+---
+
+gfortran says
+
+main.f90:20:17:
+
+   20 |   real function f(x)
+      |                 1
+Error: Procedure ‘f’ at (1) has an explicit interface from a previous declaration
+main.f90:21:25:
+
+   21 |     real, intent(in) :: x
+      |                         1
+Error: Unexpected data declaration statement in CONTAINS section at (1)
+main.f90:22:12:
+
+   22 |     f = x**2
+      |            1
+Error: Unexpected assignment statement in CONTAINS section at (1)
+main.f90:23:5:
+
+   23 |   end function f
+      |     1
+Error: Expecting END PROGRAM statement at (1)
+
+**ChatGPT-4 answer**<br>
+
+I apologize for the confusion. There is a naming conflict because we're using "f" for the function as well as a variable. Let's correct that and also remove the declaration of `rand`, since `random_number` automatically declares it as a real. 
+
+Here's the corrected code:
+
+```Fortran
+program monte_carlo_integration
+  implicit none
+  integer, parameter :: n = 10**6
+  real :: sum_val, rand_val
+  integer :: i
+
+  ! Initialize seed for random number generator
+  call random_seed()
+
+  sum_val = 0.0
+  do i = 1, n
+    call random_number(rand_val)
+    sum_val = sum_val + f(rand_val)
+  end do
+
+  print *, 'Integral is ', sum_val/real(n)
+
+contains
+
+  real function f(x)
+    real, intent(in) :: x
+    f = x**2
+  end function f
+
+end program monte_carlo_integration
+```
+
+This corrected code should work correctly in Fortran now.
+
+**Note:** the code compiles and runs, with sample output `Integral is   0.332790285`.    
+
+
 
