@@ -612,6 +612,7 @@ Also note that for very large values of `pow`, the result might become inaccurat
 **Could you use an integer type that represent larger numbers?**
 
 **ChatGPT-4 answer**
+
 Yes, Fortran allows you to specify integer types with different "kinds", where a higher "kind" number can hold larger integers. This is done using the `selected_int_kind` function, which returns the smallest integer kind number necessary to represent a number with at least a specified decimal precision.
 
 For example, to declare an integer type that can hold numbers up to 10^18, you can use `selected_int_kind(18)`. The following example shows how to do this:
