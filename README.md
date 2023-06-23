@@ -531,7 +531,7 @@ In this version of the code, both `j` and `i` are converted to real numbers befo
 ---
 
 Output is
-
+```
 1/2 = ********
 1/3 = ********
 2/3 = ********
@@ -542,6 +542,7 @@ Output is
 2/5 = ********
 3/5 = ********
 4/5 = ********
+```
 
 **ChatGPT-4 answer**
 
