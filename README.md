@@ -581,7 +581,7 @@ j = 10
 print "('powers of ',i0,'/',i0)", i, j
 print*,((i**pow)/real(j**pow), pow=1,15)
 end program main
-```fortran
+```
 
 **ChatGPT-4 answer**
 
