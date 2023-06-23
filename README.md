@@ -180,5 +180,40 @@ end program main
 
 This version of the code sets `isum` to 0 before starting the loop, ensuring that the sum starts from 0 as expected.
 
+---
 
+**Are there any problems with this Fortran code?**
 
+```Fortran
+program main
+implicit none
+integer :: i1=3, i2=5
+print "(i6,f6.2)", i1, i2
+end program main
+```
+
+**ChatGPT-4 answer**
+
+Yes, there is an issue with this code. The `print` statement is trying to print the integer `i2` as a floating-point number, which is not correct. The `f6.2` in the format specifier expects a real number, not an integer. 
+
+To print the values correctly, you should use an integer format specifier for `i2`, like `i6`. Here is the corrected version of your code:
+
+```fortran
+program main
+implicit none
+integer :: i1=3, i2=5
+print "(i6,i6)", i1, i2
+end program main
+```
+
+If you meant to print `i2` as a floating-point number (i.e., with a decimal point), you should declare `i2` as `real` or `double precision`, and assign it a floating-point value:
+
+```fortran
+program main
+implicit none
+integer :: i1=3
+real :: i2=5.0
+print "(i6,f6.2)", i1, i2
+end program main
+```
+In this case, `i2` is declared as a `real` type and assigned the floating-point value `5.0`. The print statement will now print `i2` with 2 decimal places.
