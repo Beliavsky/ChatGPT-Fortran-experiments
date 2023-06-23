@@ -217,3 +217,68 @@ print "(i6,f6.2)", i1, i2
 end program main
 ```
 In this case, `i2` is declared as a `real` type and assigned the floating-point value `5.0`. The print statement will now print `i2` with 2 decimal places.
+
+---
+
+**Any problems with this Fortran code?**
+
+```Fortran
+program main
+implicit none
+real :: x(100000000), t
+call random_number(x)
+print*,sum(x)
+call cpu_time(t)
+print*,"elapsed time =", t
+end program main
+```
+
+**ChatGPT-4 answer**
+
+The code you have provided is essentially correct and should execute successfully, provided that you have enough memory to allocate an array of size 100000000. However, there are a few points worth mentioning:
+
+1. **Array Size**: The array `x` is quite large. You need to ensure that your system has enough memory to allocate this array. If the memory is not sufficient, the program may fail to run or run very slowly.
+
+2. **Measure Time Correctly**: The `cpu_time` subroutine measures the CPU time used by the process. However, in your code, you're calling `cpu_time` after the computation and printing operation. This may not give an accurate measurement of the time taken by the computation itself (sum of `x`), because the printing operation can also consume considerable time, especially for large arrays. Here's a better way to measure the computation time:
+
+```fortran
+program main
+implicit none
+real :: x(100000000), t1, t2
+call random_number(x)
+call cpu_time(t1)
+print*,sum(x)
+call cpu_time(t2)
+print*,"elapsed time =", t2 - t1
+end program main
+```
+In this version, the time before and after the computation is measured and the difference is printed, which should give a more accurate measure of the computation time.
+
+Please note, as of my knowledge cutoff in September 2021, this answer is correct. If the Fortran standards or its compilers have changed after that, you might need to consult the updated resources.
+
+---
+
+**Another problem, quoting the gfortran documentation of cpu_time, is this:**
+
+Note that TIME may contain a, system dependent, arbitrary offset and may not start with 0.0. For CPU_TIME, the absolute value is meaningless, only differences between subsequent calls to this subroutine, as shown in the example below, should be used.
+
+**ChatGPT-4 answer**
+
+You're right, the value returned by `cpu_time` represents the amount of CPU time used by the process from some arbitrary starting point. Therefore, to measure the amount of CPU time used by a certain piece of code, you should call `cpu_time` immediately before and immediately after that code and then take the difference between the two values, which is indeed what was suggested in the corrected version of the code:
+
+```fortran
+program main
+implicit none
+real :: x(100000000), t1, t2
+call random_number(x)
+call cpu_time(t1)
+print*,sum(x)
+call cpu_time(t2)
+print*,"elapsed time =", t2 - t1
+end program main
+```
+
+In this version of the code, `cpu_time(t1)` is called immediately before the summation operation and `cpu_time(t2)` is called immediately after. The difference `t2 - t1` then represents the CPU time used by the `sum(x)` operation. This method gives a more accurate measure of the computation time than the original code.
+
+Thank you for pointing out the need for clarity about how `cpu_time` works in Fortran, as per the gfortran documentation.
+
