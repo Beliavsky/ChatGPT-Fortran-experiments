@@ -491,3 +491,78 @@ end program main
 In this code, `selected_real_kind(15, 307)` returns a `kind` type parameter for a real number type that has a precision of at least 15 decimal digits and a decimal exponent range of at least 307.
 
 Once again, I apologize for the previous misinformation. Thank you for your patience.
+
+---
+
+**Any problems with this code?**
+
+```Fortran
+program main
+implicit none
+integer :: i, j
+do i=2,5
+   do j=1,i-1
+      print "(i0,'/',i0,' = ',g8.4)", j, i, j/i
+   end do
+end do
+end program main
+```
+
+**ChatGPT-4 answer**
+
+The provided Fortran code is correct syntactically, but it contains a logical issue that might lead to unexpected results. In the print statement, the operation `j/i` is an integer division because both `j` and `i` are integers. This will result in truncation toward zero, i.e., only the integer part of the result will be retained.
+
+If you want a real number division result, you should convert one or both of the operands to real. Here's the corrected code:
+
+```fortran
+program main
+implicit none
+integer :: i, j
+do i=2,5
+   do j=1,i-1
+      print "(i0,'/',i0,' = ',g8.4)", j, i, real(j)/real(i)
+   end do
+end do
+end program main
+```
+
+In this version of the code, both `j` and `i` are converted to real numbers before the division operation, so the result is a real number division. This will give the decimal fraction that you're likely expecting.
+
+---
+
+Output is
+
+1/2 = ********
+1/3 = ********
+2/3 = ********
+1/4 = ********
+2/4 = ********
+3/4 = ********
+1/5 = ********
+2/5 = ********
+3/5 = ********
+4/5 = ********
+
+**ChatGPT-4 answer**
+
+I apologize for the confusion. The problem is with the format specified in the print statement. The 'g8.4' format tries to print a number with 8 total characters, with 4 of them after the decimal point, which also includes the point itself and the leading space for the sign of the number.
+
+This doesn't provide enough space for some numbers in the output. When the output doesn't fit into the specified format, Fortran replaces it with asterisks.
+
+You can correct the code by using a larger field width in the format specifier, as follows:
+
+```fortran
+program main
+implicit none
+integer :: i, j
+do i=2,5
+   do j=1,i-1
+      print "(i0,'/',i0,' = ',f8.4)", j, i, real(j)/real(i)
+   end do
+end do
+end program main
+```
+
+In this version of the code, the format `f8.4` is used, which reserves 8 characters for the output: 3 for the digits before the decimal point, 1 for the decimal point, and 4 for the digits after the decimal point.
+
+Please note that this formatting assumes that the ratio `j/i` will be less than 1000. If `j` or `i` could be larger than this, you should adjust the formatting accordingly.
