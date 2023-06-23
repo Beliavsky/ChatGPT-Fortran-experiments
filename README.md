@@ -567,3 +567,67 @@ end program main
 In this version of the code, the format `f8.4` is used, which reserves 8 characters for the output: 3 for the digits before the decimal point, 1 for the decimal point, and 4 for the digits after the decimal point.
 
 Please note that this formatting assumes that the ratio `j/i` will be less than 1000. If `j` or `i` could be larger than this, you should adjust the formatting accordingly.
+
+---
+
+**What is wrong with this code?**
+
+```fortran
+program main
+implicit none
+integer :: i, j, pow
+i = 9
+j = 10
+print "('powers of ',i0,'/',i0)", i, j
+print*,((i**pow)/real(j**pow), pow=1,15)
+end program main
+```fortran
+
+**ChatGPT-4 answer**
+
+The problem with your code lies in the calculation of `(i**pow)/real(j**pow)` for larger powers. The variable `i` and `pow` are both integers, so when calculating `i**pow`, it is calculated as integer power and might overflow for larger values of `pow`, leading to unexpected results or program failure.
+
+In Fortran, the maximum value for a default integer is compiler-dependent but is typically 2147483647 (2**31 - 1) for 32-bit integers. For `i = 9` and `pow = 14`, `i**pow` equals 22876792454961, which is greater than the maximum 32-bit integer value, and will cause an overflow.
+
+To fix this issue, you can convert `i` and `j` to real before performing the power operation. Here's the corrected code:
+
+```fortran
+program main
+implicit none
+integer :: pow
+real :: i, j
+i = 9.0
+j = 10.0
+print "('powers of ',f6.2,'/',f6.2)", i, j
+print*,((i**pow)/(j**pow), pow=1,15)
+end program main
+```
+
+Now, `i` and `j` are declared as real numbers, so `i**pow` and `j**pow` are calculated as real power and will not overflow for the range of `pow` in your code. 
+
+Also note that for very large values of `pow`, the result might become inaccurate due to the limitations of floating-point precision. This might lead to a loss of accuracy, but it will not cause an overflow error as the integer calculation did.
+
+---
+
+**Could you use an integer type that represent larger numbers?**
+
+**ChatGPT-4 answer**
+Yes, Fortran allows you to specify integer types with different "kinds", where a higher "kind" number can hold larger integers. This is done using the `selected_int_kind` function, which returns the smallest integer kind number necessary to represent a number with at least a specified decimal precision.
+
+For example, to declare an integer type that can hold numbers up to 10^18, you can use `selected_int_kind(18)`. The following example shows how to do this:
+
+```fortran
+program main
+    implicit none
+    integer, parameter :: big_int = selected_int_kind(18)  ! Choose kind suitable for large numbers
+    integer(kind=big_int) :: i, j, pow
+    i = 9_big_int
+    j = 10_big_int
+    print "('powers of ',i0,'/',i0)", i, j
+    print*,((i**pow)/real(j**pow), pow=1,15)
+end program main
+```
+
+Here, `big_int` is a kind type parameter that specifies a kind of integer type capable of representing numbers up to 10^18. The `i`, `j`, and `pow` variables are declared with this kind. Note that the `_big_int` suffix is used to specify the kind of the literal numbers 9 and 10.
+
+This way, the power operation is performed with higher-precision integers and will not overflow for the values used in your program. Please keep in mind, however, that the use of very large integers can lead to slower computations and higher memory usage.
