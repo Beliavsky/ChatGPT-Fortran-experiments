@@ -391,3 +391,103 @@ end program main
 In this version, the `random_seed` subroutine is first called with the `size` argument to determine the required size of the seed array. Then the seed array is allocated with this size and filled with a value (123 in this case). After that, `random_seed` is called again to set the seed, and `random_number` is called to generate a random number. Finally, `seed` is deallocated when it's no longer needed.
 
 This code works correctly even if the required seed size is larger than 1. Thank you for your patience and valuable inputs.
+
+---
+
+**Any problems with this code?**
+
+```Fortran
+program main
+implicit none
+real(kind=8) :: x
+call random_number(x)
+print*,x
+end program main
+```
+
+**ChatGPT-4 answer**
+
+The provided Fortran code should run fine. However, it's important to note that using `real(kind=8)` to specify double precision is not a universally portable approach in Fortran. The `kind` parameter doesn't directly correspond to the precision or size of the type but is compiler-dependent.
+
+If you want your code to be portable and to ensure that `x` is a double precision real number, you should use the `selected_real_kind` function or the parameter `dp` (double precision) from the `iso_fortran_env` module.
+
+Here's an example:
+
+```fortran
+program main
+use iso_fortran_env, only : dp
+implicit none
+real(kind=dp) :: x
+call random_number(x)
+print*,x
+end program main
+```
+or
+```fortran
+program main
+implicit none
+integer, parameter :: dp = selected_real_kind(15, 307)
+real(kind=dp) :: x
+call random_number(x)
+print*,x
+end program main
+```
+In the first corrected version, `iso_fortran_env` module is used, which provides a portable way to declare double precision real numbers using `dp`.
+
+In the second corrected version, `selected_real_kind` function is used to determine a `kind` type parameter matching the precision and range specified.
+
+These methods ensure the portability of your code across different compilers and systems.
+
+---
+
+For the first program gfortran says
+
+main.f90:2:27:
+
+    2 | use iso_fortran_env, only : dp
+      |                           1
+Error: Symbol ‘dp’ referenced at (1) not found in intrinsic module ISO_FORTRAN_ENV
+main.f90:4:12:
+
+    4 | real(kind=dp) :: x
+      |            1
+Error: Symbol ‘dp’ at (1) has no IMPLICIT type
+main.f90:5:20:
+
+    5 | call random_number(x)
+      |                    1
+Error: Symbol ‘x’ at (1) has no IMPLICIT type
+
+**ChatGPT-4 answer**
+
+I apologize for the confusion. The `dp` parameter is not actually part of the `iso_fortran_env` module in the current Fortran standard up to Fortran 2018. This was my mistake. 
+
+The `iso_fortran_env` module provides named constants for portable kind type parameters for integer and real types, but it doesn't include `dp`. Instead, it includes `real32`, `real64`, and `real128` for real types.
+
+You can use `real64` if you want to specify a real number with at least the precision of a double precision number:
+
+```fortran
+program main
+use iso_fortran_env, only : real64
+implicit none
+real(kind=real64) :: x
+call random_number(x)
+print*,x
+end program main
+```
+
+And if you want to specify a real number with double precision or greater, you can use `selected_real_kind` as shown in the previous message. This function lets you specify the precision and range you need, and it returns a `kind` type parameter that meets those requirements:
+
+```fortran
+program main
+implicit none
+integer, parameter :: dp = selected_real_kind(15, 307)
+real(kind=dp) :: x
+call random_number(x)
+print*,x
+end program main
+```
+
+In this code, `selected_real_kind(15, 307)` returns a `kind` type parameter for a real number type that has a precision of at least 15 decimal digits and a decimal exponent range of at least 307.
+
+Once again, I apologize for the previous misinformation. Thank you for your patience.
