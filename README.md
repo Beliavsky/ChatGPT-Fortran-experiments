@@ -1363,6 +1363,8 @@ This way, `trim` is still needed to remove the trailing spaces, but at least you
 
 Please note that in Fortran, whitespace is significant in string comparisons. So, "big" and "big  " are considered different strings. The `trim` function removes trailing whitespace, so `trim(words(1))` would give "big", while `words(1)` without `trim` would give "big  ".
 
+**Note:** answer is wrong because trim(words(1)) and trim(words(2)) have different LEN.
+
 ---
 
 **ChatGPT-4 flounders on this question. The simple fix is to merge the result of the trim function, not the character variables passed to merge. The code is**
