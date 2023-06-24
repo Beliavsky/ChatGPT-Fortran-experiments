@@ -1,5 +1,5 @@
 # ChatGPT-Fortran-experiments
-Experiments with ChatGPT to generate or analyze Fortran code. See also https://github.com/Beliavsky/Fortran-with-ChatGPT and https://github.com/Beliavsky/Optimization-Codes-by-ChatGPT
+Experiments with ChatGPT to generate or find flaws in Fortran code. See also https://github.com/Beliavsky/Fortran-with-ChatGPT and https://github.com/Beliavsky/Optimization-Codes-by-ChatGPT
 
 ---
 **Translate pseudocode to Fortran:**
