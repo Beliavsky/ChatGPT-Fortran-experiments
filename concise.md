@@ -114,3 +114,127 @@ end
 ```
 
 This version keeps the call to `random_number` to populate the array `x` and calculates the sum of the array elements directly in the print statement. It omits the use of the variable `xsum` and the loop, simplifying the code while maintaining the original functionality.
+
+---
+
+**Write this Fortran program more concisely:**
+
+```Fortran
+implicit none
+integer :: i, npositive, n = 100
+real :: x
+logical :: positive
+npositive = 0
+do i=1,n
+   call random_number(x)
+   x = x - 0.5
+   if (x > 0.0) then
+      positive = .true.
+   else
+      positive = .false.
+   end if
+   if (positive) then
+      npositive = npositive + 1
+   end if
+end do
+print*,"n, npositive =",n,npositive
+end
+```
+
+**ChatGPT-4 answer**
+
+The Fortran program you provided can be made more concise by removing the logical variable `positive`. We can increment `npositive` directly in the `if` statement. Here's a more concise version:
+
+```fortran
+implicit none
+integer :: i, npositive, n = 100
+real :: x
+npositive = 0
+do i=1,n
+   call random_number(x)
+   x = x - 0.5
+   if (x > 0.0) npositive = npositive + 1
+end do
+print*, "n, npositive =", n, npositive
+end
+```
+
+In this version, `x` is still generated randomly and shifted by -0.5. If `x` is greater than 0, `npositive` is incremented. The logical variable `positive` is removed to make the program more concise while still achieving the same result.
+
+---
+
+**Make it even more concise.**
+
+Here's an even more concise version of the program:
+
+```fortran
+implicit none
+integer :: i, npositive = 0, n = 100
+do i=1,n
+   if (random_number() > 0.5) npositive = npositive + 1
+end do
+print*, "n, npositive =", n, npositive
+end
+```
+
+This version of the program directly checks the condition inside the `if` statement, incrementing `npositive` if the generated random number (automatically subtracted by 0.5 due to the condition `> 0.5`) is greater than 0. Thus, we have eliminated the `x` variable, further condensing the code. Please note that the function `random_number()` is assumed to return a random real number between 0 and 1, which is the standard behavior for most programming languages. However, in Fortran, you have to use `call random_number(x)` to store the result in a variable. It can't be used as a function that returns a value, hence the previous versions.
+
+I apologize for the confusion, but unfortunately, due to Fortran's semantics, this is already the most concise version that preserves the functionality of the original code:
+
+```fortran
+implicit none
+integer :: i, npositive = 0, n = 100
+real :: x
+do i=1,n
+   call random_number(x)
+   if (x - 0.5 > 0.0) npositive = npositive + 1
+end do
+print*, "n, npositive =", n, npositive
+end
+```
+
+This version calls `random_number(x)` in the loop and directly checks if `x - 0.5 > 0.0`, incrementing `npositive` if the condition is met. The program does not define or use the `positive` variable, making it more concise.
+
+---
+
+**Make it more concise, assuming you can store all the random variates generated in an array.**
+
+**ChatGPT-4 answer**
+
+Assuming we can store all the random variates in an array, we can use the `where` construct in Fortran to make your program more concise:
+
+```fortran
+implicit none
+integer, parameter :: n = 100
+real :: x(n)
+integer :: npositive
+
+call random_number(x)
+x = x - 0.5
+npositive = count(x > 0.0)
+
+print*, "n, npositive =", n, npositive
+end
+```
+
+In this version of the program, an array `x` of size `n` is populated with random numbers. These numbers are then each decremented by 0.5. The `count` function is used to find the number of elements in `x` that are greater than 0.0, effectively replacing the loop and conditionals in the original program. This results in a more concise code.
+
+---
+
+**Make it more concise.**
+
+**ChatGPT-4 answer**
+
+The code is already quite succinct, but you could slightly increase its conciseness by moving the decrement operation into the count function:
+
+```fortran
+implicit none
+integer, parameter :: n = 100
+real :: x(n)
+
+call random_number(x)
+print*, "n, npositive =", n, count(x - 0.5 > 0.0)
+end
+```
+
+In this version, `x - 0.5 > 0.0` directly calculates the shifted values and compares them, removing the need for the `npositive` variable. The result of `count(x - 0.5 > 0.0)` is directly printed, which calculates the number of elements in `x` that are greater than 0 after the shift of 0.5.
