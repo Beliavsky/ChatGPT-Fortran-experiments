@@ -278,3 +278,38 @@ In this version, `positive` is set to the outcome of the condition `x > 0`, whic
 **Make it even more concise.**
 
 ChatGPT-4 does not know what to do, and it must be told that the parentheses in `positive = (x > 0)` are unnecessary.
+
+---
+
+**Make this Fortran code more concise:**
+
+```Fortran
+implicit none
+integer :: n
+character (len=4) :: label
+! set n
+if (mod(n, 2) == 0) then
+   label = "even"
+else
+   label = "odd"
+end if
+! use label
+end
+```
+
+**ChatGPT-4 answer**
+
+You can make your Fortran code more concise by assigning the result of the condition directly to `label` in one line, using the ternary-like operator `merge`. Here's a more concise version:
+
+```fortran
+implicit none
+integer :: n
+character (len=4) :: label
+! set n
+label = merge("even", "odd", mod(n, 2) == 0)
+! use label
+end
+```
+
+In this version, `merge` is used to assign `label` based on the condition `mod(n, 2) == 0`. If the condition is true (i.e., `n` is even), `label` is assigned "even". Otherwise (i.e., `n` is odd), `label` is assigned "odd". This achieves the same result as your original code in a more concise way.
+
