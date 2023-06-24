@@ -238,3 +238,43 @@ end
 ```
 
 In this version, `x - 0.5 > 0.0` directly calculates the shifted values and compares them, removing the need for the `npositive` variable. The result of `count(x - 0.5 > 0.0)` is directly printed, which calculates the number of elements in `x` that are greater than 0 after the shift of 0.5.
+
+---
+
+**Make this Fortran code fragment more concise:**
+
+```Fortran
+implicit none
+real :: x
+logical :: positive
+! set x
+if (x > 0) then
+   positive = .true.
+else
+   positive = .false.
+end if
+! do something with positive
+end
+```
+
+**ChatGPT-4 answer**
+
+The Fortran code fragment you provided can be made more concise by removing the `if`-`else` structure. The logical variable `positive` can be directly set based on the condition. Here's a more concise version:
+
+```fortran
+implicit none
+real :: x
+logical :: positive
+! set x
+positive = (x > 0)
+! do something with positive
+end
+```
+
+In this version, `positive` is set to the outcome of the condition `x > 0`, which will be `.true.` if `x` is greater than 0 and `.false.` otherwise. This achieves the same result as your original code in a more concise way.
+
+---
+
+**Make it even more concise.**
+
+ChatGPT-4 does not know what to do, and it must be told that the parentheses in `positive = (x > 0)` are unnecessary.
