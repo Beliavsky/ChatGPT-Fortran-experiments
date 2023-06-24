@@ -996,3 +996,84 @@ In this corrected code, the strings in `first_names` are correctly separated by 
 You're absolutely correct, my apologies for the confusion. The strings in your original array initialization were indeed separated by commas correctly. The issue was indeed with the trailing spaces in the string, which made the output not as expected. Using the `trim` function as in the corrected code will remove those trailing spaces and make the output look as expected.
 
 I appreciate your patience and correction, thank you.
+
+---
+
+**What is wrong with this code:**
+
+```Fortran
+program main
+implicit none
+integer, parameter :: n = 3
+real :: x, y(n)
+integer :: i
+do i=1,n
+   call random_number(x)
+   y = 10*x
+end do
+print*,y
+end program main
+```
+
+**ChatGPT-4 answer**
+
+The problem with your code lies in the loop where you're assigning a value to the array `y`. In the loop, you're calling the `random_number` function to generate a random number `x`, and then you're attempting to assign `10*x` to `y`. 
+
+However, `y` is an array with `n` elements, but in each iteration of your loop, you're trying to assign a single value `10*x` to the entire array `y`. This will overwrite the entire array with the new value in each loop iteration, so after the loop finishes, `y` will only contain the last generated value repeated `n` times, rather than `n` different random numbers.
+
+Here's the corrected code:
+
+```fortran
+program main
+implicit none
+integer, parameter :: n = 3
+real :: x, y(n)
+integer :: i
+do i=1,n
+   call random_number(x)
+   y(i) = 10*x
+end do
+print*,y
+end program main
+```
+
+In the corrected code, `y(i) = 10*x` assigns the value `10*x` to the `i`-th element of `y` in each loop iteration, rather than overwriting the entire array. This way, `y` will contain `n` different random numbers as expected.
+
+---
+
+**What is wrong with this code:**
+
+```Fortran
+program main
+implicit none
+real :: x(3)
+real :: xmin, xmax
+call random_number(x)
+xmin = minval(x)
+xmax = maxval(x)
+print*,"min =",minval(x)
+end program main
+```
+
+In this code, you calculate both the minimum and maximum values of the array `x` with `minval` and `maxval` functions respectively. However, in the print statement, you only print out the minimum value (`minval(x)`) and ignore `xmax` which holds the maximum value of `x`.
+
+Also, you computed `xmin` but never used it. You seem to be trying to print the minimum value of `x` twice, both directly and through `xmin`.
+
+The corrected code may look like this:
+
+```fortran
+program main
+implicit none
+real :: x(3)
+real :: xmin, xmax
+call random_number(x)
+xmin = minval(x)
+xmax = maxval(x)
+print*,"min =",xmin," max =",xmax
+end program main
+```
+
+In this corrected code, `xmin` and `xmax` are both printed out, showing the minimum and maximum values of the array `x` respectively.
+
+---
+
