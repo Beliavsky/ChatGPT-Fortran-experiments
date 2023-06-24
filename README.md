@@ -1,6 +1,26 @@
 # ChatGPT-Fortran-experiments
 Experiments with ChatGPT to generate or find flaws in Fortran code. See also https://github.com/Beliavsky/Fortran-with-ChatGPT and https://github.com/Beliavsky/Optimization-Codes-by-ChatGPT
 
+The flaws tested, most but not all of which ChatGPT-4 detects, are
+
+* using uninitialized variables
+* format string not matching types of variables to be printed
+* incorrect use of `cpu_time()`
+* use of `put` argument with wrong size in `random_seed()`
+* hard-coding kind numbers as in `real(kind=8)`
+* unintended integer division
+* integer overflow
+* incorrect use of unlimited format
+* unintentional implicit save in a procedure
+* incorrectly specified double precision constant
+* overlapping `intent(in)` and `intent(out)` arguments
+* incorrect concatenation of character variables without `trim`
+* inadvertent whole-array operations
+* variable set but not used
+* use of an `optional` argument that is not `present`
+* exiting the wrong level of loop
+* out-of-bounds array element due to incorrect loop bounds or interchanged subscripts
+
 ---
 **Translate pseudocode to Fortran:**
 
