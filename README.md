@@ -1,5 +1,5 @@
 # ChatGPT-Fortran-experiments
-Here are experiments with ChatGPT to find flaws in Fortran code and [generate Fortran from pseudocode](pseudocode.md). See also https://github.com/Beliavsky/Fortran-with-ChatGPT and https://github.com/Beliavsky/Optimization-Codes-by-ChatGPT
+Here are experiments with ChatGPT to find flaws in Fortran code, [make code more concise](concise.md), and [generate Fortran from pseudocode](pseudocode.md). See also https://github.com/Beliavsky/Fortran-with-ChatGPT and https://github.com/Beliavsky/Optimization-Codes-by-ChatGPT
 
 The flaws tested, most but not all of which ChatGPT-4 detects, are
 
