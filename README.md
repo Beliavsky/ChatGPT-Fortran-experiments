@@ -877,3 +877,80 @@ end program main
 ```
 
 This code should output the value of pi to the precision of a double-precision real number. Thank you for catching that mistake.
+
+---
+
+**What is wrong with this program:**
+
+```Fortran
+program xmain
+implicit none
+real :: x
+x = 2.1
+call twice(x,x)
+print*,x
+!
+contains
+subroutine twice(x, x2)
+real, intent(in) :: x
+real, intent(out) :: x2
+x2 = 2*x
+end subroutine twice
+end program xmain
+```
+
+**ChatGPT-4 answer**
+
+The problem with the program is that the `twice` subroutine uses the same name (`x`) for both its input argument and output argument. Fortran does not support this kind of parameter aliasing. 
+
+Here is the corrected code:
+
+```fortran
+program xmain
+implicit none
+real :: x, y
+x = 2.1
+call twice(x, y)
+print*, y
+!
+contains
+subroutine twice(x, y)
+real, intent(in) :: x
+real, intent(out) :: y
+y = 2*x
+end subroutine twice
+end program xmain
+```
+In this corrected code, the `twice` subroutine takes `x` as an input argument and `y` as an output argument. It computes 2 times `x` and assigns the result to `y`. The main program then prints the value of `y`, which should be twice the initial value of `x`.
+
+---
+
+**You could fix the original program by making the call statement**
+
+`call twice((x),x)`
+
+**ChatGPT-4 answer**
+
+Yes, you are correct. This is a neat trick in Fortran! By using parentheses around the first `x` in the call, you're forcing Fortran to evaluate `x` before calling the subroutine. Therefore, it effectively treats `(x)` and `x` as separate entities. 
+
+The revised program would look like:
+
+```fortran
+program xmain
+implicit none
+real :: x
+x = 2.1
+call twice((x),x)
+print*,x
+!
+contains
+subroutine twice(x, x2)
+real, intent(in) :: x
+real, intent(out) :: x2
+x2 = 2*x
+end subroutine twice
+end program xmain
+```
+In this case, `(x)` is used as input and `x` as output. This will give the correct output `4.2` without changing the signature of the subroutine. 
+
+It's a good approach to use when the subroutine needs to modify the value of the variable that's also used as an input. But be careful, it may make the code less clear for those who aren't familiar with this aspect of Fortran!
