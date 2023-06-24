@@ -1382,3 +1382,85 @@ do i=1,5
 end do
 end program main
 ```
+
+---
+
+**What is wrong with this code:**
+
+```Fortran
+module m
+implicit none
+contains
+!
+recursive integer function factorial(i) result(ifac)
+integer, intent(in) :: i
+ifac = i*factorial(i)
+end function factorial
+end module m
+!
+program main
+use m
+implicit none
+print*,factorial(4)
+end program main
+```
+
+**ChatGPT-4 answer**
+
+The problem with your code is the lack of a termination condition for the recursion in the `factorial` function. The factorial of a number n is calculated as n times the factorial of (n-1). Therefore, for the recursion to terminate, we need to specify that the factorial of 0 is 1. 
+
+Your `factorial` function goes into an infinite recursive loop because there's no condition to stop the recursion. 
+
+Here is the corrected version of your code:
+
+```fortran
+module m
+implicit none
+contains
+!
+recursive integer function factorial(i) result(ifac)
+integer, intent(in) :: i
+if (i == 0) then
+   ifac = 1
+else
+   ifac = i*factorial(i-1)
+end if
+end function factorial
+end module m
+!
+program main
+use m
+implicit none
+print*,factorial(4)
+end program main
+```
+
+In this corrected version, the function `factorial` has a termination condition: when `i` equals 0, it returns 1, stopping the recursion. For any other `i`, it does the multiplication and recursively calls itself with `i-1`. This function correctly computes the factorial of an integer.
+
+---
+
+**Another problem in the original code, which you silently fixed, is that**
+
+`ifac = i*factorial(i)`
+
+**should be**
+
+`ifac = i*factorial(i-1)`
+
+**ChatGPT-4 answer**
+
+Yes, you are correct. I apologize for not explicitly pointing that out. 
+
+The formula for the factorial of a number `n` is `n` times the factorial of `n-1`, not `n` times the factorial of `n`. This is why the original code has `factorial(i)`, which is incorrect, and the corrected code has `factorial(i-1)`. 
+
+So the corrected recursion statement, which includes the termination condition, should be:
+
+```fortran
+if (i == 0) then
+   ifac = 1
+else
+   ifac = i * factorial(i-1)
+end if
+```
+
+This way, each recursive call reduces the argument by 1 until it reaches 0, at which point the recursion stops.
