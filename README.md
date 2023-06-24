@@ -1465,3 +1465,69 @@ end if
 ```
 
 This way, each recursive call reduces the argument by 1 until it reaches 0, at which point the recursion stops.
+
+---
+
+**What is wrong with this code:**
+
+```Fortran
+program main
+implicit none
+integer :: iunit = 6
+open (unit=iunit, file="temp.txt", action="write")
+write (iunit,*) "hello"
+print*,"wrote to temp.txt"
+end program main
+```
+
+**ChatGPT-4 answer**
+
+The problem with your code is that you're trying to use unit number 6 to open a file. In Fortran, unit numbers 5 and 6 are typically pre-connected to standard input and standard output, respectively. This means that attempting to open a file using unit 6 can potentially cause conflicts.
+
+Here's a correct version of your program:
+
+```fortran
+program main
+implicit none
+integer :: iunit = 10
+open (unit=iunit, file="temp.txt", action="write")
+write (iunit,*) "hello"
+close(iunit) 
+print*,"wrote to temp.txt"
+end program main
+```
+In this version, I've used a unit number that is not pre-connected (10 in this case, but it could be any integer not already used), and I've added a call to close the file after writing to it.
+
+---
+
+**It's better to use the newunit specifier of Fortran 2008, giving**
+
+```Fortran
+program main
+implicit none
+integer :: iunit
+open (newunit=iunit, file="temp.txt", action="write")
+write (iunit,*) "hello"
+print*,"wrote to temp.txt"
+end program main
+```
+
+**ChatGPT-4 answer**
+
+Yes, that's a good point. Using the `newunit` keyword in the `open` statement is a better and safer approach introduced in Fortran 2008. The `newunit` keyword tells Fortran to find an unused unit number and assign it to `iunit`. This avoids the potential for conflicts and makes it easier to manage multiple file units.
+
+Your corrected code should work fine with a Fortran compiler that supports Fortran 2008 or later. Here's the corrected code again for reference:
+
+```fortran
+program main
+implicit none
+integer :: iunit
+open (newunit=iunit, file="temp.txt", action="write")
+write (iunit,*) "hello"
+print*,"wrote to temp.txt"
+end program main
+```
+
+In this code, the `open` statement tells Fortran to open the file "temp.txt" for writing, and assign an unused unit number to `iunit`. The `write` statement then writes "hello" to the file. Finally, the `print` statement writes "wrote to temp.txt" to standard output.
+
+However, it's still considered good practice to include a `close` statement when you're done with the file, even if it isn't strictly necessary in this specific case. This can prevent potential problems in larger, more complex programs.
