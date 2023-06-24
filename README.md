@@ -1122,9 +1122,7 @@ In your original code, when `n2 < n1`, you would attempt to assign values to pos
 
 ---
 
-**What is wrong with this code:"
-
-What is wrong with this code:
+**What is wrong with this code:**
 
 ```Fortran
 program main
