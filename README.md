@@ -954,3 +954,45 @@ end program xmain
 In this case, `(x)` is used as input and `x` as output. This will give the correct output `4.2` without changing the signature of the subroutine. 
 
 It's a good approach to use when the subroutine needs to modify the value of the variable that's also used as an input. But be careful, it may make the code less clear for those who aren't familiar with this aspect of Fortran!
+
+---
+
+**What is wrong with this code:**
+
+```Fortran
+program main
+implicit none
+character (len=5) :: first_names(3) = ["Al   ", "Elle ", "Kevin"]
+integer :: i
+do i=1,size(first_names)
+   print*,"full name is " // first_names(i) // " Smith"
+end do
+end program main
+```
+
+**ChatGPT-4 answer**
+
+The problem with this code is in the initialization of the `first_names` array. In Fortran, strings inside array constructors should be separated by commas, not by spaces. 
+
+Here is the corrected code:
+
+```fortran
+program main
+implicit none
+character (len=5) :: first_names(3) = ["Al   ", "Elle ", "Kevin"]
+integer :: i
+do i=1,size(first_names)
+   print*,"full name is " // trim(first_names(i)) // " Smith"
+end do
+end program main
+```
+
+In this corrected code, the strings in `first_names` are correctly separated by commas. The `trim` intrinsic function is also used to remove trailing spaces from the strings before they are concatenated with `" Smith"`. This should print out the full names correctly.
+
+---
+
+**The strings were separated by commas in the initial code. The problem was not using the trim function, which you fixed.**
+
+You're absolutely correct, my apologies for the confusion. The strings in your original array initialization were indeed separated by commas correctly. The issue was indeed with the trailing spaces in the string, which made the output not as expected. Using the `trim` function as in the corrected code will remove those trailing spaces and make the output look as expected.
+
+I appreciate your patience and correction, thank you.
