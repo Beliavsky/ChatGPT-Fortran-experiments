@@ -20,6 +20,7 @@ The flaws tested, most but not all of which ChatGPT-4 detects, are
 * use of an `optional` argument that is not `present`
 * exiting the wrong level of loop
 * out-of-bounds array element due to incorrect loop bounds or interchanged subscripts
+* assuming that `merge` will short-circuit
 
 ---
 
