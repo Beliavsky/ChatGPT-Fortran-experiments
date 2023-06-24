@@ -22,6 +22,7 @@ The flaws tested, most but not all of which ChatGPT-4 detects, are
 * out-of-bounds array element due to incorrect loop bounds or interchanged subscripts
 * assuming that `merge` will short-circuit
 * assuming that after normal termination of `do i=1,n` that `i` equals `n` rather than `n+1`
+* `merge` passed character variable arguments of unequal LEN
   
 ---
 
