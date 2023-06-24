@@ -1286,3 +1286,96 @@ end program main
 ```
 
 This prints the last element of the array `x`, ensuring that the array bounds are respected. Thank you for correcting my earlier explanation.
+
+---
+
+**What is wrong with this code:**
+
+```Fortran
+program main
+implicit none
+character (len=5) :: words(2) = ["big  ", "small"]
+real :: x
+integer :: i
+do i=1,5
+   call random_number(x)
+   print*,x," is ",merge(trim(words(1)), trim(words(2)), x > 0.5)
+end do
+end program main
+```
+
+**ChatGPT-4 answer**
+
+The code is generating a random number `x`, and then printing the phrase "x is big" if `x > 0.5` and "x is small" otherwise. There doesn't seem to be a logical or syntactical problem with this code according to Fortran standards, and it should execute correctly.
+
+However, you could improve the readability and efficiency of your program by trimming your word strings at initialization:
+
+```fortran
+program main
+implicit none
+character (len=:), allocatable :: words(:)
+real :: x
+integer :: i
+words = ["big", "small"]
+do i=1,5
+   call random_number(x)
+   print*,x," is ",merge(words(1), words(2), x > 0.5)
+end do
+end program main
+```
+
+In this version, we use assumed-length strings and assign them directly to the array, which automatically trims any unnecessary white spaces. This way, you won't need to call `trim()` every time within the loop, saving computational resources.
+
+---
+
+**gfortran says**
+
+```
+gfortran says
+
+main.f90:6:15:
+
+    6 | words = ["big", "small"]
+      |               1
+Error: Different CHARACTER lengths (3/5) in array constructor at (1)
+```
+
+**WRONG ChatGPT-4 answer**
+
+Sorry for the confusion. It's a mistake on my part. Fortran, unlike some other languages, requires all elements in an array to be of the same length. That's why you're getting an error message when you try to initialize the `words` array with strings of different lengths.
+
+One way around this is to define the array with the length of the longest string. If you know that the longest string has length `5` (as in "small"), you could do:
+
+```fortran
+program main
+implicit none
+character(len=5) :: words(2) = ["big  ", "small"]
+real :: x
+integer :: i
+do i=1,5
+   call random_number(x)
+   print*,x," is ",merge(trim(words(1)), trim(words(2)), x > 0.5)
+end do
+end program main
+```
+
+This way, `trim` is still needed to remove the trailing spaces, but at least you're assured that the array can be initialized without error. 
+
+Please note that in Fortran, whitespace is significant in string comparisons. So, "big" and "big  " are considered different strings. The `trim` function removes trailing whitespace, so `trim(words(1))` would give "big", while `words(1)` without `trim` would give "big  ".
+
+---
+
+**ChatGPT-4 flounders on this question. The simple fix is to merge the result of the trim function, not the character variables passed to merge. The code is**
+
+```Fortran
+program main
+implicit none
+character (len=5) :: words(2) = ["big  ", "small"]
+real :: x
+integer :: i
+do i=1,5
+   call random_number(x)
+   print*,x," is ",trim(merge(words(1), words(2), x > 0.5))
+end do
+end program main
+```
