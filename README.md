@@ -1670,3 +1670,41 @@ print*,x
 end program main
 ```
 In this version, the subroutine `arange` is now responsible for allocating the memory for `x`, and the size `n` of the array to be allocated is passed as an argument from the main program.
+
+---
+
+**What is wrong with this code:**
+
+What is wrong with this code:
+
+```Fortran
+program main
+implicit none
+character (len=20) :: text
+character (len=10) :: date
+real               :: x
+text = "6/24/2023 3.2"
+read (text,*) date, x
+print*,"date, x =", date, x
+end program main
+```
+
+**ChatGPT-4 answer**
+
+The problem with your code is the format of the `read` statement. In your code, you're using `read (text,*) date, x` which is a list-directed input and makes Fortran to interpret the data in its own way. Here it interprets the "/" in the date as a delimiter between two data points, causing the date to only contain the part before "/" and then attempts to convert the next part (24/2023) to a real number which leads to error.
+
+A possible fix could be reading the input using a formatted read statement:
+
+```fortran
+program main
+implicit none
+character (len=20) :: text
+character (len=10) :: date
+real               :: x
+text = "6/24/2023 3.2"
+read (text,'(A10,F4.1)') date, x
+print*,"date, x =", date, x
+end program main
+```
+
+In the format statement `'A10,F4.1'`, `A10` tells Fortran to read the first 10 characters into `date`, and `F4.1` tells it to read the next 4 characters as a real number with 1 decimal place into `x`. Note that this assumes that the date always occupies the first 10 characters and the real number occupies the next 4 characters. If your data does not follow this pattern, you might need to adjust the format accordingly.
