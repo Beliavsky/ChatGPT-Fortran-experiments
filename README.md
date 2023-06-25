@@ -27,7 +27,8 @@ The flaws tested, most but not all of which ChatGPT-4 detects, are
 * assuming that an `allocatable` character variable is allocated during a `read`
 * using an `allocatable, intent(out)` argument that has been deallocated
 * not realizing that `/` is the end-of-record character
-
+* passing constant to `intent(out)` or `intent(in out)` argument
+  
 ---
 
 **Are there any problems with this Fortran code?**
