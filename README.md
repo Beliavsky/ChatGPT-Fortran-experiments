@@ -25,6 +25,7 @@ The flaws tested, most but not all of which ChatGPT-4 detects, are
 * `merge` passed character variable arguments of unequal LEN
 * `recursive` function without terminating condition
 * assuming that an `allocatable` character variable is allocated during a `read`
+* using an `allocatable, intent(out)` argument that has been deallocated
 
 ---
 
