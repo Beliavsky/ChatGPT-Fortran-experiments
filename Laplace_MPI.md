@@ -439,4 +439,49 @@ end subroutine exchange_data
 
 Please note that this code assumes that the domain decomposition is done along the y-direction and that each processor has a complete row of data (including ghost cells at the top and bottom). It's always good practice to include checks to make sure the domain decomposition is done correctly.
 
+---
+
+**Intel Fortran says**
+
+Intel(R) Fortran Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.6.0 Build 20220226_000000
+Copyright (C) 1985-2022 Intel Corporation.  All rights reserved.
+
+Microsoft (R) Incremental Linker Version 14.31.31105.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+-out:xlaplace3.exe 
+-subsystem:console 
+xlaplace3.obj 
+xlaplace3.obj : error LNK2019: unresolved external symbol MPI_INIT referenced in function MAIN__
+xlaplace3.obj : error LNK2019: unresolved external symbol MPI_COMM_RANK referenced in function MAIN__
+xlaplace3.obj : error LNK2019: unresolved external symbol MPI_COMM_SIZE referenced in function MAIN__
+xlaplace3.obj : error LNK2019: unresolved external symbol MPI_ISEND referenced in function MAIN__
+xlaplace3.obj : error LNK2019: unresolved external symbol MPI_IRECV referenced in function MAIN__
+xlaplace3.obj : error LNK2019: unresolved external symbol MPI_WAITALL referenced in function MAIN__
+xlaplace3.obj : error LNK2019: unresolved external symbol MPI_FINALIZE referenced in function MAIN__
+xlaplace3.exe : fatal error LNK1120: 7 unresolved externals
+
+**ChatGPT-4 answer**
+
+The error messages suggest that the MPI (Message Passing Interface) library isn't properly linked to your Fortran program. To compile Fortran code that includes MPI functions, you usually need to use a Fortran compiler provided by the MPI implementation, such as `mpif90` or `mpifort`, instead of directly using `ifort`.
+
+The exact command depends on the MPI implementation that you have installed, but a typical compile command would look something like this:
+
+```bash
+mpif90 -o laplace xlaplace3.f90
+```
+
+or
+
+```bash
+mpifort -o laplace xlaplace3.f90
+```
+
+`mpif90` and `mpifort` are compiler wrappers that include the necessary flags to link against the MPI libraries. If you installed MPI through a package manager, these should be installed automatically. If you built MPI from source, they should be available in the `bin` directory of your MPI installation.
+
+The actual name of the MPI Fortran compiler may vary depending on the MPI implementation. For instance, with Open MPI, the compiler is usually called `mpifort`, while with MPICH it might be called `mpif90` or `mpif77`.
+
+Please replace `mpif90` or `mpifort` with the appropriate command for your specific MPI implementation. If you aren't sure what to use, you may need to refer to the documentation for your specific MPI implementation.
+
+In some circumstances, if you must use `ifort` directly, you'll need to manually specify the path to your MPI libraries and include files. This can get complex and is generally not recommended unless you're very sure about what you're doing. Please consult your MPI implementation's documentation for detailed instructions if you need to do this.
 
