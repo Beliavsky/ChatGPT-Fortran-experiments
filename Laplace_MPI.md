@@ -375,4 +375,68 @@ end subroutine exchange_data
 
 This code decomposes the domain along the y-direction and communicates the ghost rows at the top and bottom of each subdomain. This means that the subdomains overlap in the y-direction, so that each process has a complete copy of its own subdomain plus one row from the neighboring subdomains. This overlap allows the finite difference stencil to be applied at all points in the interior of the subdomain.
 
+---
+
+**Intel Fortran says**
+
+xlaplace2.f90(81): error #6404: This name does not have a type, and must have an explicit type.   [N]
+        call MPI_ISEND(u(:,2), n, MPI_DOUBLE_PRECISION, neighbors(1), 0, MPI_COMM_WORLD, request(1), ierr)
+-------------------------------^
+compilation aborted for xlaplace2.f90 (code 1)
+
+**ChatGPT-4 answer**
+
+My apologies for the mistake. The error you're seeing indicates that `n` is used before it is defined in the subroutine `exchange_data`. The subroutine does not have access to the `n` from the main program.
+
+The best way to solve this problem is to pass `n` as an argument to the subroutine `exchange_data` like so:
+
+```fortran
+...
+    ! Exchange boundary data with neighbors
+    call exchange_data(u, n, neighbors)
+...
+
+subroutine exchange_data(u, n, neighbors)
+    use mpi
+
+    implicit none
+
+    double precision, dimension(:,:), intent(inout) :: u
+    integer, intent(in) :: n
+    integer, dimension(:), intent(in) :: neighbors
+    integer :: ierr
+    integer, dimension(4) :: request
+    integer, dimension(MPI_STATUS_SIZE) :: status
+
+    ! Use non-blocking sends and receives for efficient communication
+    ! Assuming neighbors(1) is the bottom neighbor and neighbors(2) is the top neighbor
+
+    ! Send to bottom neighbor
+    if (neighbors(1) >= 0) then
+        call MPI_ISEND(u(:,2), n, MPI_DOUBLE_PRECISION, neighbors(1), 0, MPI_COMM_WORLD, request(1), ierr)
+    end if
+
+    ! Send to top neighbor
+    if (neighbors(2) >= 0) then
+        call MPI_ISEND(u(:,n-1), n, MPI_DOUBLE_PRECISION, neighbors(2), 0, MPI_COMM_WORLD, request(2), ierr)
+    end if
+
+    ! Receive from bottom neighbor
+    if (neighbors(1) >= 0) then
+        call MPI_IRECV(u(:,1), n, MPI_DOUBLE_PRECISION, neighbors(1), 0, MPI_COMM_WORLD, request(3), ierr)
+    end if
+
+    ! Receive from top neighbor
+    if (neighbors(2) >= 0) then
+        call MPI_IRECV(u(:,n), n, MPI_DOUBLE_PRECISION, neighbors(2), 0, MPI_COMM_WORLD, request(4), ierr)
+    end if
+
+    ! Wait for all communication to finish
+    call MPI_WAITALL(4, request, status, ierr)
+
+end subroutine exchange_data
+```
+
+Please note that this code assumes that the domain decomposition is done along the y-direction and that each processor has a complete row of data (including ghost cells at the top and bottom). It's always good practice to include checks to make sure the domain decomposition is done correctly.
+
 
