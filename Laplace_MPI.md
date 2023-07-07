@@ -124,7 +124,7 @@ This code does not include the logic to determine the neighboring ranks (i.e., t
 
 **Intel Fortran says**
 
-
+```
 xlaplace.f90(23): error #6404: This name does not have a type, and must have an explicit type.   [N]
     allocate(u(n,n), u_old(n,n))
 ---------------^
@@ -140,6 +140,7 @@ xlaplace.f90(23): error #6385: The highest data type rank permitted is INTEGER(K
 xlaplace.f90(23): error #6385: The highest data type rank permitted is INTEGER(KIND=8).   [N]
     allocate(u(n,n), u_old(n,n))
 -----------------------------^
+```
 
 **ChatGPT-4 answer**
 
@@ -255,10 +256,12 @@ Now the code should compile without errors. Remember that in a real-world applic
 
 **Intel Fortran still gives one error message:**
 
+```
 xlaplace1.f90(86): error #6404: This name does not have a type, and must have an explicit type.   [N]
         call MPI_ISEND(u(n-1,:), 1, MPI_DOUBLE_PRECISION, neighbors(2), 0, MPI_COMM_WORLD, request, ierr)
 -------------------------^
 compilation aborted for xlaplace1.f90 (code 1)
+```
 
 **ChatGPT-4 answer**
 
@@ -379,10 +382,12 @@ This code decomposes the domain along the y-direction and communicates the ghost
 
 **Intel Fortran says**
 
+```
 xlaplace2.f90(81): error #6404: This name does not have a type, and must have an explicit type.   [N]
         call MPI_ISEND(u(:,2), n, MPI_DOUBLE_PRECISION, neighbors(1), 0, MPI_COMM_WORLD, request(1), ierr)
 -------------------------------^
 compilation aborted for xlaplace2.f90 (code 1)
+```
 
 **ChatGPT-4 answer**
 
@@ -443,6 +448,7 @@ Please note that this code assumes that the domain decomposition is done along t
 
 **Intel Fortran says**
 
+```
 Intel(R) Fortran Intel(R) 64 Compiler Classic for applications running on Intel(R) 64, Version 2021.6.0 Build 20220226_000000
 Copyright (C) 1985-2022 Intel Corporation.  All rights reserved.
 
@@ -460,6 +466,7 @@ xlaplace3.obj : error LNK2019: unresolved external symbol MPI_IRECV referenced i
 xlaplace3.obj : error LNK2019: unresolved external symbol MPI_WAITALL referenced in function MAIN__
 xlaplace3.obj : error LNK2019: unresolved external symbol MPI_FINALIZE referenced in function MAIN__
 xlaplace3.exe : fatal error LNK1120: 7 unresolved externals
+```
 
 **ChatGPT-4 answer**
 
@@ -484,4 +491,3 @@ The actual name of the MPI Fortran compiler may vary depending on the MPI implem
 Please replace `mpif90` or `mpifort` with the appropriate command for your specific MPI implementation. If you aren't sure what to use, you may need to refer to the documentation for your specific MPI implementation.
 
 In some circumstances, if you must use `ifort` directly, you'll need to manually specify the path to your MPI libraries and include files. This can get complex and is generally not recommended unless you're very sure about what you're doing. Please consult your MPI implementation's documentation for detailed instructions if you need to do this.
-
