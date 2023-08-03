@@ -1099,6 +1099,49 @@ Now, `dx` is of size `n-1` and you're only accessing valid elements in `x`.
 
 ---
 
+**Are there any problems with this Fortran code?**
+
+```Fortran
+pure function moving_average(x, nterms) result(y)
+! Return the moving average of x(:) using nterms. For y(i) with i < nterms use the
+! mean of x(1:i).
+integer      , parameter  :: dp = kind(1.0d0)
+real(kind=dp), intent(in) :: x(:)
+integer      , intent(in) :: nterms
+real(kind=dp)             :: y(size(x))
+integer                   :: i, n
+real(kind=dp)             :: xsum, ymult
+n = size(x)
+if (n < 1 .or. nterms < 1) return
+xsum = 0.0_dp
+do i=1,nterms
+   xsum = xsum + x(i)
+   y(i) = xsum/i
+end do
+ymult = 1.0_dp/nterms
+do i=nterms+1,n
+   xsum = xsum + x(i) - x(i-nterms)
+   y(i) = ymult*xsum
+end do
+end function moving_average
+```
+
+**ChatGPT-4 answer**
+
+The code you've provided for computing the moving average appears to be mostly correct. However, there is an issue that might occur if `nterms` is greater than the size of the input array `x`. Specifically, the loop that starts with `do i=1,nterms` assumes that `nterms` is less than or equal to `n`, where `n` is the size of `x`. If `nterms` is greater than `n`, the code will attempt to access elements of `x` that are out of bounds.
+
+You can fix this by adding a check to ensure that `nterms` is not greater than `n`. Here's an example:
+
+```fortran
+if (n < 1 .or. nterms < 1 .or. nterms > n) return
+```
+
+This ensures that `nterms` is within the bounds of the array `x`, and will prevent any out-of-bounds access.
+
+Other than this issue, the code appears to be well-formed and should calculate the moving average as described in the comments.
+
+---
+
 **What is wrong with this code:**
 
 ```Fortran
