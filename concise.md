@@ -277,7 +277,7 @@ In this version, `positive` is set to the outcome of the condition `x > 0`, whic
 
 **Make it even more concise.**
 
-ChatGPT-4 does not know what to do, and it must be told that the parentheses in `positive = (x > 0)` are unnecessary.
+ChatGPT-4 does not know what to do, and it must be told that the parentheses in `positive = (x > 0)` are unnecessary. Edit: on 2024-10-22, ChatGPT-4o did remove the parentheses.
 
 ---
 
